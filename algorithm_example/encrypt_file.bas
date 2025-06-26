@@ -5,7 +5,7 @@ If Command$(1) = "-d" Then MODE = 2
 If MODE = 0 Then Print "Error": System
 Open Command$(2) For Binary As #1
 Dim Shared PWD_CRC~&
-PWD_CRC~& = CRC32(Command$(3))
+PWD_CRC~& = crc32(Command$(3))
 A$ = String$(LOF(1), 0)
 Get #1, , A$
 Close #1
@@ -31,21 +31,20 @@ End Select
 A$ = ""
 Close
 System
-Function CRC32~& (__IN$)
-    Dim As _Unsigned Long __CRC32_POLY, __CRC
+Function crc32~& (__IN$) Static
+    Dim As _Unsigned Long __CRC32_POLY, __CRC, __I
+    Dim As _Unsigned _Byte __J
+    $Checking:Off
     __CRC32_POLY = &HEDB88320
     __CRC = &HFFFFFFFF
-    For __I& = 1 To Len(__IN$)
-        __CRC = __CRC Xor Asc(Mid$(__IN$, __I&, 1))
+    For __I = 1 To Len(__IN$)
+        __CRC = __CRC Xor Asc(__IN$, __I)
         For __J = 1 To 8
-            If __CRC And 1 Then
-                __CRC = (__CRC \ 2) Xor __CRC32_POLY
-            Else
-                __CRC = __CRC \ 2
-            End If
+            If __CRC And 1 Then __CRC = (__CRC \ 2) Xor __CRC32_POLY Else __CRC = __CRC \ 2
         Next __J
-    Next __I&
-    CRC32~& = Not __CRC
+    Next __I
+    $Checking:On
+    crc32~& = Not __CRC
 End Function
 Function ENCRYPT$ (__IN$)
     Dim BYTE~%%, __I&, __I$16, __J$16

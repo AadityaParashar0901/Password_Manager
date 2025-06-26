@@ -4,3 +4,5 @@ Encrypting: encrypt_file -e [Exact File Path] [Password]
 	will create a file named FULLFILENAME + ".encrypted"
 Decrypting: encrypt_file -d [Exact File Path] [Password]
 	will create a file named FULLFILENAME + ".decrypted"
+
+the decrypted output file has to be trimmed...
